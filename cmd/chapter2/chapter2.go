@@ -6,12 +6,11 @@ import (
 	"time"
 
 	"github.com/crmaykish/mazes/pkg/cell"
-
 	"github.com/crmaykish/mazes/pkg/grid"
 )
 
-const width = 10
-const height = 4
+const width = 3
+const height = 3
 
 func main() {
 	fmt.Println("Chapter 2: Binary Tree Algorithm")
@@ -24,16 +23,25 @@ func main() {
 	for i := 0; i < g.Rows; i++ {
 		for j := 0; j < g.Columns; j++ {
 			var currentCell = grid.CellAt(g, i, j)
-			var northNeighbor = grid.CellAt(g, i, j).North
+
+			var neighbors []*cell.Cell
+
+			var northNeighbor = grid.CellAt(g, j, j).North
 			var eastNeighbor = grid.CellAt(g, i, j).East
 
-			if r.Intn(2) == 0 {
-				if northNeighbor != nil {
-					cell.CellLink(currentCell, northNeighbor)
-				}
-			} else {
-				if eastNeighbor != nil {
-					cell.CellLink(currentCell, eastNeighbor)
+			if northNeighbor != nil {
+				neighbors = append(neighbors, northNeighbor)
+			}
+
+			if eastNeighbor != nil {
+				neighbors = append(neighbors, eastNeighbor)
+			}
+
+			if len(neighbors) > 0 {
+				var randomNeighbor = neighbors[r.Intn(len(neighbors))]
+
+				if randomNeighbor != nil {
+					cell.CellLink(currentCell, randomNeighbor)
 				}
 			}
 		}
