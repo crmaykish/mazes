@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -13,12 +12,16 @@ const width = 20
 const height = 8
 
 func main() {
-	fmt.Println("Chapter 2: Binary Tree Algorithm")
+	var g = grid.GridInit(width, height)
 
+	BinaryTree(g)
+
+	grid.Print(g)
+}
+
+func BinaryTree(g *grid.Grid) {
 	var source = rand.NewSource(time.Now().UnixNano())
 	var r = rand.New(source)
-
-	var g = grid.GridInit(width, height)
 
 	for x := 0; x < g.Width; x++ {
 		for y := 0; y < g.Height; y++ {
@@ -46,6 +49,8 @@ func main() {
 			}
 		}
 	}
+}
 
-	grid.Print(g)
+func SideWinder(g grid.Grid) {
+
 }
