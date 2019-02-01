@@ -14,7 +14,8 @@ const height = 8
 func main() {
 	var g = grid.GridInit(width, height)
 
-	BinaryTree(g)
+	// BinaryTree(g)
+	SideWinder(g)
 
 	grid.Print(g)
 }
@@ -51,6 +52,44 @@ func BinaryTree(g *grid.Grid) {
 	}
 }
 
-func SideWinder(g grid.Grid) {
+func SideWinder(g *grid.Grid) {
+	var source = rand.NewSource(time.Now().UnixNano())
+	var r = rand.New(source)
 
+	// Loop through the grid by rows
+	for y := 0; y < g.Height; y++ {
+		var run []*cell.Cell
+		// Loop through each cell in the row
+		for x := 0; x < g.Width; x++ {
+			var currentCell = grid.CellAt(g, x, y)
+
+			run = append(run, currentCell)
+
+			var atEasternBoundary bool
+			var atNorthernBoundary bool
+
+			if currentCell.East == nil {
+				atEasternBoundary = true
+			}
+
+			if currentCell.North == nil {
+				atNorthernBoundary = true
+			}
+
+			var shouldCloseOut = atEasternBoundary || !atNorthernBoundary && r.Intn(2) == 0
+
+			if shouldCloseOut {
+				var member = run[r.Intn(len(run))]
+
+				if member.North != nil {
+					cell.CellLink(member, member.North)
+				}
+
+				// Clear the run of cells
+				run = nil
+			} else {
+				cell.CellLink(currentCell, currentCell.East)
+			}
+		}
+	}
 }
