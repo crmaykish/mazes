@@ -9,8 +9,8 @@ import (
 	"github.com/crmaykish/mazes/pkg/grid"
 )
 
-const width = 3
-const height = 3
+const width = 20
+const height = 8
 
 func main() {
 	fmt.Println("Chapter 2: Binary Tree Algorithm")
@@ -20,14 +20,14 @@ func main() {
 
 	var g = grid.GridInit(width, height)
 
-	for i := 0; i < g.Rows; i++ {
-		for j := 0; j < g.Columns; j++ {
-			var currentCell = grid.CellAt(g, i, j)
+	for x := 0; x < g.Width; x++ {
+		for y := 0; y < g.Height; y++ {
+			var currentCell = grid.CellAt(g, x, y)
 
 			var neighbors []*cell.Cell
 
-			var northNeighbor = grid.CellAt(g, j, j).North
-			var eastNeighbor = grid.CellAt(g, i, j).East
+			var northNeighbor = grid.CellAt(g, x, y).North
+			var eastNeighbor = grid.CellAt(g, x, y).East
 
 			if northNeighbor != nil {
 				neighbors = append(neighbors, northNeighbor)

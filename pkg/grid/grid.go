@@ -9,20 +9,20 @@ import (
 )
 
 type Grid struct {
-	Rows    int
-	Columns int
-	Cells   [][]cell.Cell
+	Width  int
+	Height int
+	cells  [][]cell.Cell
 }
 
-func GridInit(r, c int) *Grid {
-	if r <= 0 || c <= 0 {
+func GridInit(w, h int) *Grid {
+	if w <= 0 || h <= 0 {
 		return nil
 	}
 
 	var grid = new(Grid)
 
-	grid.Rows = r
-	grid.Columns = c
+	grid.Width = w
+	grid.Height = h
 
 	prepare(grid)
 	configureCells(grid)
@@ -30,36 +30,37 @@ func GridInit(r, c int) *Grid {
 	return grid
 }
 
-func CellAt(grid *Grid, row, column int) *cell.Cell {
-	return &grid.Cells[row][column]
+func CellAt(grid *Grid, x, y int) *cell.Cell {
+	return &grid.cells[x][y]
 }
 
 func RandomCell(grid *Grid) *cell.Cell {
 	var source = rand.NewSource(time.Now().UnixNano())
 	var r = rand.New(source)
 
-	return &grid.Cells[r.Intn(grid.Rows)][r.Intn(grid.Columns)]
+	return &grid.cells[r.Intn(grid.Width)][r.Intn(grid.Height)]
 }
 
 func Size(grid *Grid) int {
-	return grid.Rows * grid.Columns
+	return grid.Width * grid.Height
 }
 
 func Print(grid *Grid) {
+
 	var output = "+"
 
-	for i := 0; i < grid.Columns; i++ {
+	for i := 0; i < grid.Width; i++ {
 		output += "---+"
 	}
 
 	output += "\n"
 
-	for i := 0; i < grid.Rows; i++ {
+	for y := grid.Height - 1; y >= 0; y-- {
 		var top = "|"
 		var bottom = "+"
 
-		for j := 0; j < grid.Columns; j++ {
-			var currentCell = CellAt(grid, i, j)
+		for x := 0; x < grid.Width; x++ {
+			var currentCell = CellAt(grid, x, y)
 
 			var body = "   "
 			var eastBoundary string
@@ -73,7 +74,7 @@ func Print(grid *Grid) {
 
 			top += (body + eastBoundary)
 
-			if cell.CellsLinked(CellAt(grid, i, j), CellAt(grid, i, j).South) {
+			if cell.CellsLinked(currentCell, currentCell.South) {
 				southBoundary = "   "
 			} else {
 				southBoundary = "---"
@@ -92,37 +93,40 @@ func Print(grid *Grid) {
 }
 
 func prepare(grid *Grid) {
-	// create the outer slice
-	grid.Cells = make([][]cell.Cell, grid.Rows)
+	// Create the outer slices
+	grid.cells = make([][]cell.Cell, grid.Width)
 
-	for i := 0; i < grid.Rows; i++ {
-		// great each inner slice
-		grid.Cells[i] = make([]cell.Cell, grid.Columns)
+	for x := 0; x < grid.Width; x++ {
+		// Create the inner slices
+		grid.cells[x] = make([]cell.Cell, grid.Height)
 
-		for j := 0; j < grid.Columns; j++ {
+		for y := 0; y < grid.Height; y++ {
 			// populate each cell in the grid
-			grid.Cells[i][j] = cell.CellInit(i, j)
+			grid.cells[x][y] = cell.CellInit(x, y)
 		}
 	}
 }
 
 func configureCells(grid *Grid) {
-	for i := 0; i < grid.Rows; i++ {
-		for j := 0; j < grid.Columns; j++ {
+	for x := 0; x < grid.Width; x++ {
+		for y := 0; y < grid.Height; y++ {
+			var c = CellAt(grid, x, y)
 
-			if i > 0 {
-				grid.Cells[i][j].North = &grid.Cells[i-1][j]
+			if y < grid.Height-1 {
+				c.North = CellAt(grid, x, y+1)
 			}
 
-			if i < grid.Rows-1 {
-				grid.Cells[i][j].South = &grid.Cells[i+1][j]
+			if y > 0 {
+				c.South = CellAt(grid, x, y-1)
 			}
 
-			if j > 0 {
-				grid.Cells[i][j].West = &grid.Cells[i][j-1]
+			if x < grid.Width-1 {
+				c.East = CellAt(grid, x+1, y)
+			} else {
 			}
-			if j < grid.Columns-1 {
-				grid.Cells[i][j].East = &grid.Cells[i][j+1]
+
+			if x > 0 {
+				c.West = CellAt(grid, x-1, y)
 			}
 		}
 	}

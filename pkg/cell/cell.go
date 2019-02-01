@@ -1,39 +1,36 @@
 package cell
 
-// TODO: maybe build a map with the key being the coords for the Linked Cells?
-// would save a lot of trouble messing around with slices
-
 type Cell struct {
-	Row    int
-	Column int
-	links  map[string]*Cell
-	North  *Cell
-	South  *Cell
-	East   *Cell
-	West   *Cell
+	X     int
+	Y     int
+	links map[string]*Cell
+	North *Cell
+	South *Cell
+	East  *Cell
+	West  *Cell
 }
 
-func CellInit(row, column int) Cell {
+func CellInit(x, y int) Cell {
 	var cell Cell
 
-	cell.Row = row
-	cell.Column = column
+	cell.X = x
+	cell.Y = y
 	cell.links = make(map[string]*Cell)
 
 	return cell
 }
 
 func CellLink(cell1, cell2 *Cell) {
-	var key1 = string(cell1.Row) + string(cell1.Column)
-	var key2 = string(cell2.Row) + string(cell2.Column)
+	var key1 = key(cell1)
+	var key2 = key(cell2)
 
 	cell1.links[key2] = cell2
 	cell2.links[key1] = cell1
 }
 
 func CellUnlink(cell1, cell2 *Cell) {
-	var key1 = string(cell1.Row) + string(cell1.Column)
-	var key2 = string(cell2.Row) + string(cell2.Column)
+	var key1 = key(cell1)
+	var key2 = key(cell2)
 
 	delete(cell1.links, key2)
 	delete(cell2.links, key1)
@@ -47,7 +44,7 @@ func CellsLinked(cell1, cell2 *Cell) bool {
 		return false
 	}
 
-	var key2 = string(cell2.Row) + string(cell2.Column)
+	var key2 = key(cell2)
 
 	return cell1.links[key2] != nil
 }
@@ -72,4 +69,8 @@ func CellNeighbors(cell *Cell) []Cell {
 	}
 
 	return neighbors
+}
+
+func key(cell *Cell) string {
+	return string(cell.X) + string(cell.Y)
 }
