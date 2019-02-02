@@ -10,10 +10,10 @@ import (
 )
 
 // Maze settings
-const width = 20
-const height = 14
-const cellSize = 16
-const wallThickness = 1
+const width = 100
+const height = 60
+const cellSize = 12
+const wallThickness = 2
 const outsidePadding = cellSize
 
 // Colors

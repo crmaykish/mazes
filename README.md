@@ -1,13 +1,34 @@
 # Maze Tools in Go
 This is a collection of mazes and tools based on the book *Mazes for Programmers* by Jamis Buck.
 
-### Algorithms:
+## Algorithms:
 * Binary Tree
 * SideWinder
 
-### Tools:
+## Tools:
 * ASCII Renderer
-* PNG Renderer
+* Unicode Renderer
+* Image Renderer
 
-### Examples: 
+## Examples: 
+
+### ASCII
+```
++---+---+---+---+---+---+---+---+
+|                               |
++---+---+   +   +   +   +   +---+
+|           |   |   |   |       |
++---+   +---+---+   +   +   +---+
+|               |   |   |       |
++   +   +   +---+   +   +   +   +
+|   |   |   |       |   |   |   |
++---+---+---+---+---+---+---+---+
+```
+
+### Unicode
+```
+
+```
+
+### PNG
 ![Maze](assets/maze.png)

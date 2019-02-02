@@ -1,7 +1,6 @@
 package grid
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -43,53 +42,6 @@ func RandomCell(grid *Grid) *cell.Cell {
 
 func Size(grid *Grid) int {
 	return grid.Width * grid.Height
-}
-
-func Print(grid *Grid) {
-
-	var output = "+"
-
-	for i := 0; i < grid.Width; i++ {
-		output += "---+"
-	}
-
-	output += "\n"
-
-	for y := grid.Height - 1; y >= 0; y-- {
-		var top = "|"
-		var bottom = "+"
-
-		for x := 0; x < grid.Width; x++ {
-			var currentCell = CellAt(grid, x, y)
-
-			var body = "   "
-			var eastBoundary string
-			var southBoundary string
-
-			if cell.CellsLinked(currentCell, currentCell.East) {
-				eastBoundary = " "
-			} else {
-				eastBoundary = "|"
-			}
-
-			top += (body + eastBoundary)
-
-			if cell.CellsLinked(currentCell, currentCell.South) {
-				southBoundary = "   "
-			} else {
-				southBoundary = "---"
-			}
-
-			var corner = "+"
-
-			bottom += (southBoundary + corner)
-		}
-
-		output += (top + "\n")
-		output += (bottom + "\n")
-	}
-
-	fmt.Println(output)
 }
 
 func prepare(grid *Grid) {
