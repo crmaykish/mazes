@@ -9,8 +9,8 @@ import (
 	"github.com/crmaykish/mazes/pkg/grid"
 )
 
-const width = 12
-const height = 7
+const width = 15
+const height = 8
 
 const cellBody = "   "
 
@@ -61,9 +61,9 @@ func main() {
 			// Always add the cell body to the middle line of this row
 			midLine += cellBody
 
-			var currentCell = grid.CellAt(g, x, y)
+			var c = grid.CellAt(g, x, y)
 
-			if cell.CellsLinked(currentCell, currentCell.East) {
+			if cell.CellsLinked(c, c.East) {
 				// If this cell is linked the cell east of it, open the passage
 				midLine += " "
 			} else {
@@ -71,51 +71,81 @@ func main() {
 				midLine += "┃"
 			}
 
-			if cell.CellsLinked(currentCell, currentCell.South) {
+			if cell.CellsLinked(c, c.South) {
 				bottomLine += cellBody
 			} else {
 				bottomLine += "━━━"
 			}
 
 			// Figure out which corner piece to render
-			// ╋  ┻  ┳  ┫  ┣  ┛  ┗  ┓  ┏
+			// ╋  ┻  ┳  ┫  ┣  ┛  ┗  ┓  ┏  ━  ┃
 
-			// If cell and cell.east are not linked
-			// AND cell and cell.south are not linked
-			// AND cell.east and cell.east.south are not linked
-			// AND cell.south and cell.south.east are not linked
-			if currentCell.South != nil && currentCell.East != nil &&
-				!cell.CellsLinked(currentCell, currentCell.East) &&
-				!cell.CellsLinked(currentCell, currentCell.South) &&
-				!cell.CellsLinked(currentCell.East, currentCell.East.South) &&
-				!cell.CellsLinked(currentCell.South, currentCell.South.East) {
+			if c.South != nil &&
+				c.East != nil &&
+				!cell.CellsLinked(c, c.East) &&
+				!cell.CellsLinked(c, c.South) &&
+				!cell.CellsLinked(c.East, c.East.South) &&
+				!cell.CellsLinked(c.South, c.South.East) {
 				bottomLine += "╋"
-			} else if currentCell.East != nil &&
-				!cell.CellsLinked(currentCell, currentCell.East) &&
-				!cell.CellsLinked(currentCell, currentCell.South) &&
-				!cell.CellsLinked(currentCell.East, currentCell.East.South) &&
-				(currentCell.South == nil || cell.CellsLinked(currentCell.South, currentCell.South.East)) {
+			} else if c.East != nil &&
+				!cell.CellsLinked(c, c.East) &&
+				!cell.CellsLinked(c, c.South) &&
+				!cell.CellsLinked(c.East, c.East.South) &&
+				(c.South == nil ||
+					cell.CellsLinked(c.South, c.South.East)) {
 				bottomLine += "┻"
-			} else if currentCell.South != nil && currentCell.East != nil &&
-				cell.CellsLinked(currentCell, currentCell.East) &&
-				!cell.CellsLinked(currentCell, currentCell.South) &&
-				!cell.CellsLinked(currentCell.East, currentCell.East.South) &&
-				!cell.CellsLinked(currentCell.South, currentCell.South.East) {
+			} else if c.South != nil &&
+				c.East != nil &&
+				cell.CellsLinked(c, c.East) &&
+				!cell.CellsLinked(c, c.South) &&
+				!cell.CellsLinked(c.East, c.East.South) &&
+				!cell.CellsLinked(c.South, c.South.East) {
 				bottomLine += "┳"
-			} else if currentCell.South != nil &&
-				!cell.CellsLinked(currentCell, currentCell.East) &&
-				!cell.CellsLinked(currentCell, currentCell.South) &&
-				!cell.CellsLinked(currentCell.South, currentCell.South.East) &&
-				(currentCell.East == nil || cell.CellsLinked(currentCell.East, currentCell.East.South)) {
+			} else if c.South != nil &&
+				!cell.CellsLinked(c, c.East) &&
+				!cell.CellsLinked(c, c.South) &&
+				!cell.CellsLinked(c.South, c.South.East) &&
+				(c.East == nil ||
+					cell.CellsLinked(c.East, c.East.South)) {
 				bottomLine += "┫"
-			} else if currentCell.South != nil && currentCell.East != nil &&
-				!cell.CellsLinked(currentCell, currentCell.East) &&
-				cell.CellsLinked(currentCell, currentCell.South) &&
-				!cell.CellsLinked(currentCell.South, currentCell.South.East) &&
-				!cell.CellsLinked(currentCell.East, currentCell.East.South) {
+			} else if c.South != nil &&
+				c.East != nil &&
+				!cell.CellsLinked(c, c.East) &&
+				cell.CellsLinked(c, c.South) &&
+				!cell.CellsLinked(c.South, c.South.East) &&
+				!cell.CellsLinked(c.East, c.East.South) {
 				bottomLine += "┣"
-			} else {
-				bottomLine += "+"
+			} else if !cell.CellsLinked(c, c.East) &&
+				!cell.CellsLinked(c, c.South) &&
+				((c.East == nil && c.South == nil) ||
+					(cell.CellsLinked(c.East, c.East.South) &&
+						cell.CellsLinked(c.South, c.South.East))) {
+				bottomLine += "┛"
+			} else if c.South != nil &&
+				c.East != nil &&
+				!cell.CellsLinked(c, c.East) &&
+				cell.CellsLinked(c, c.South) &&
+				!cell.CellsLinked(c.East, c.East.South) &&
+				cell.CellsLinked(c.South, c.South.East) {
+				bottomLine += "┗"
+			} else if c.South != nil &&
+				c.East != nil &&
+				cell.CellsLinked(c, c.East) &&
+				!cell.CellsLinked(c, c.South) &&
+				cell.CellsLinked(c.East, c.East.South) &&
+				!cell.CellsLinked(c.South, c.South.East) {
+				bottomLine += "┓"
+			} else if c.South != nil &&
+				c.East != nil &&
+				cell.CellsLinked(c, c.East) &&
+				cell.CellsLinked(c, c.South) &&
+				!cell.CellsLinked(c.East, c.East.South) &&
+				!cell.CellsLinked(c.South, c.South.East) {
+				bottomLine += "┏"
+			} else if (c.South == nil || !cell.CellsLinked(c.South, c.South.East)) && y != 0 {
+				bottomLine += "┃"
+			} else if cell.CellsLinked(c, c.East) {
+				bottomLine += "━"
 			}
 		}
 
