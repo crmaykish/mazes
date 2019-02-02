@@ -1,4 +1,4 @@
-package main
+package algorithm
 
 import (
 	"math/rand"
@@ -7,18 +7,6 @@ import (
 	"github.com/crmaykish/mazes/pkg/cell"
 	"github.com/crmaykish/mazes/pkg/grid"
 )
-
-const width = 20
-const height = 8
-
-func main() {
-	var g = grid.GridInit(width, height)
-
-	// BinaryTree(g)
-	SideWinder(g)
-
-	grid.Print(g)
-}
 
 func BinaryTree(g *grid.Grid) {
 	var source = rand.NewSource(time.Now().UnixNano())
